@@ -3,3 +3,5 @@ docker-compose up
 docker-compose up -build
 
 docker logs -f --tail 100 micro-catalog-app
+
+docker logs -f --tail 50 micro-catalog-app
