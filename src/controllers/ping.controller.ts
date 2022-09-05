@@ -2,7 +2,7 @@ import {inject} from '@loopback/core';
 import {ClassDecoratorFactory, MetadataInspector} from '@loopback/metadata';
 import {repository} from '@loopback/repository';
 import {
-  get, Request, response,
+  get, param, Request, response,
   ResponseObject, RestBindings
 } from '@loopback/rest';
 import {CategoryRepository} from '../repositories';
@@ -59,22 +59,27 @@ export class PingController {
   ping(): object {
     // Reply with a greeting, the current time, the url, and request headers
     return {
-      greeting: 'Hello from LoopBack!!!!!',
+      greeting: 'Hello from LoopBack!!!',
       date: new Date(),
       url: this.req.url,
       headers: Object.assign({}, this.req.headers),
     };
   }
 
+  @get('/categories/{id}')
+  async get(@param.path.string('id') id: string) {
+    console.log('ggs2');
+    return this.categoryRepo.findById(id + "");
+  }
+
   @get('/categories')
-  async index() {
-    await this.categoryRepo.create({
+  async create() {
+    return await this.categoryRepo.create({
       id: '1',
       name: 'minha primeira categoria',
-      description: 'minha descricao'
+      created_at: new Date(),
+      updated_at: new Date()
     });
-
-    return this.categoryRepo.find();
   }
 }
 
@@ -82,5 +87,3 @@ const meta = MetadataInspector.getClassMetadata<MyClassMetadata>(
   'metadata-my-class-decorator',
   PingController
 );
-
-//console.log(meta);
