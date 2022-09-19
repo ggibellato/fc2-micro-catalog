@@ -1,5 +1,6 @@
 import './bootstrap';
 //
+import {RestServer} from '@loopback/rest';
 import {ApplicationConfig, MicroCatalogApplication} from './application';
 
 export * from './application';
@@ -9,7 +10,8 @@ export async function main(options: ApplicationConfig = {}) {
   await app.boot();
   await app.start();
 
-  const url = app.restServer.url;
+  const restServer = app.getSync<RestServer>('servers.RestServer');
+  const url = restServer.url;
   console.log(`Server is running ata ${url}`);
   console.log(`Try ${url}/ping`);
 
@@ -31,6 +33,14 @@ if (require.main === module) {
       openApiSpec: {
         // useful when used with OpenAPI-to-GraphQL to locate your application
         setServersFromRequest: true,
+      },
+      cors: {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        allowedHeaders: 'Access-Control-Allow-*',
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
+        credentials: true,
       },
     },
   };
